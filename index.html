@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sintetizador Académico - Inteligente</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --border: #cbd5e1;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+        h1 { margin-top: 0; font-size: 24px; color: var(--primary); }
+        label { display: block; margin-bottom: 8px; font-weight: 600; }
+        input[type="password"], textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        textarea { height: 180px; resize: vertical; }
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
+        button:hover { background-color: var(--primary-hover); }
+        button:disabled { background-color: var(--border); cursor: not-allowed; }
+        #resultado {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f1f5f9;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        .loading { text-align: center; color: #64748b; font-style: italic; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>📚 Sintetizador Académico</h1>
+        <p>Pega el texto del campus y genera tu resumen con cuadros sinópticos al instante.</p>
+
+        <label for="apiKey">Tu API Key de Gemini:</label>
+        <input type="password" id="apiKey" placeholder="AIzaSy...">
+
+        <label for="textoCampus">Texto o Apunte del Campus:</label>
+        <textarea id="textoCampus" placeholder="Pega aquí el contenido del PDF o texto que bajaste..."></textarea>
+
+        <button id="btnProcesar" onclick="generarResumen()">Generar Resumen Inteligente</button>
+
+        <div id="resultado" style="display: none;"></div>
+    </div>
+
+    <script>
+        async function generarResumen() {
+            const apiKey = document.getElementById('apiKey').value.trim();
+            const texto = document.getElementById('textoCampus').value.trim();
+            const divResultado = document.getElementById('resultado');
+            const btn = document.getElementById('btnProcesar');
+
+            if (!apiKey || !texto) {
+                alert('Por favor, ingresa tu API Key y el texto a resumir.');
+                return;
+            }
+
+            // Bloquear interfaz mientras procesa
+            btn.disabled = true;
+            divResultado.style.display = 'block';
+            divResultado.innerHTML = '<div class="loading">🤖 Analizando texto, extrayendo ideas clave y armando cuadros sinópticos... Un segundo.</div>';
+
+            const prompt = `Actúa como un tutor académico experto. Realiza un resumen estructurado, detallado y de alta calidad pedagógica del siguiente texto universitario/escolar.
+Requisitos obligatorios:
+1. Ideas principales y conceptos clave explicados de forma clara y directa.
+2. Esquemas o cuadros sinópticos utilizando formato de texto estructurado (viñetas claras o tablas en Markdown).
+3. Lenguaje dinámico, didáctico y enfocado en la retención rápida de conocimientos.
+
+Texto a sintetizar:
+${texto}`;
+
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }]
+            };
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (data.candidates && data.candidates[0].content) {
+                    const resumenFinal = data.candidates[0].content.parts[0].text;
+                    divResultado.innerText = resumenFinal;
+                } else {
+                    divResultado.innerText = '❌ Error al generar el resumen. Revisa tu API Key o el formato del texto.';
+                }
+            } catch (error) {
+                divResultado.innerText = '❌ Error de red: ' + error.message;
+            } finally {
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
