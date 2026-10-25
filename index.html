@@ -3,139 +3,372 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sintetizador Académico - Inteligente</title>
+    <title>Sintetizador Académico - Centro de Estudio</title>
+    <!-- Fuente moderna Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #4f46e5;
-            --primary-hover: #4338ca;
-            --bg: #f8fafc;
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --bg-main: #f8fafc;
             --card-bg: #ffffff;
-            --text: #1e293b;
-            --border: #cbd5e1;
+            --text-title: #0f172a;
+            --text-body: #334155;
+            --border-color: #e2e8f0;
+            --accent-green: #10b981;
         }
+
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-body);
             margin: 0;
-            padding: 20px;
+            padding: 30px 15px;
             display: flex;
             justify-content: center;
         }
-        .container {
+
+        .dashboard {
             width: 100%;
-            max-width: 800px;
+            max-width: 950px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Encabezado Principal */
+        .header {
             background: var(--card-bg);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            padding: 24px 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
         }
-        h1 { margin-top: 0; font-size: 24px; color: var(--primary); }
-        label { display: block; margin-bottom: 8px; font-weight: 600; }
-        input[type="password"], textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border);
+
+        .header h1 {
+            margin: 0;
+            font-size: 22px;
+            color: var(--text-title);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .api-config input {
+            padding: 9px 14px;
+            border: 1px solid var(--border-color);
             border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 14px;
-            margin-bottom: 20px;
+            font-size: 13px;
+            outline: none;
+            width: 220px;
         }
-        textarea { height: 180px; resize: vertical; }
-        button {
+
+        /* Barra de Control (Importación + Idioma) */
+        .control-panel {
+            background: var(--card-bg);
+            padding: 24px 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .import-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-drive {
+            background-color: #eff6ff;
+            color: var(--primary);
+            border: 1px dashed var(--primary);
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-drive:hover {
+            background-color: #dbeafe;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .select-lang {
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background: var(--card-bg);
+            color: var(--text-title);
+            font-weight: 500;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .btn-action {
             background-color: var(--primary);
             color: white;
             border: none;
-            padding: 12px 20px;
-            font-size: 16px;
+            padding: 14px 28px;
+            font-size: 15px;
             font-weight: 600;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
             width: 100%;
             transition: background 0.2s;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
         }
-        button:hover { background-color: var(--primary-hover); }
-        button:disabled { background-color: var(--border); cursor: not-allowed; }
-        #resultado {
-            margin-top: 30px;
-            padding: 20px;
-            background: #f1f5f9;
-            border-radius: 8px;
-            border-left: 4px solid var(--primary);
+
+        .btn-action:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-action:disabled {
+            background-color: #94a3b8;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .file-status {
+            font-size: 13px;
+            color: var(--accent-green);
+            font-weight: 600;
+            width: 100%;
+        }
+
+        /* Pantalla Exclusiva de Resultado / Hoja de Estudio */
+        .results-container {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            min-height: 350px;
+        }
+
+        .doc-header {
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .doc-title {
+            font-size: 19px;
+            font-weight: 700;
+            color: var(--text-title);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .doc-body {
+            line-height: 1.8;
             white-space: pre-wrap;
-            line-height: 1.6;
+            font-size: 15px;
+            color: var(--text-body);
         }
-        .loading { text-align: center; color: #64748b; font-style: italic; }
+
+        .placeholder-text {
+            color: #94a3b8;
+            text-align: center;
+            padding: 80px 0;
+            font-style: italic;
+        }
+
+        .loading-state {
+            text-align: center;
+            padding: 60px 0;
+            color: #64748b;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>📚 Sintetizador Académico</h1>
-        <p>Pega el texto del campus y genera tu resumen con cuadros sinópticos al instante.</p>
+    <div class="dashboard">
 
-        <label for="apiKey">Tu API Key de Gemini:</label>
-        <input type="password" id="apiKey" placeholder="AIzaSy...">
+        <!-- Encabezado con API Key guardable -->
+        <div class="header">
+            <h1>🎓 Sintetizador Académico</h1>
+            <div class="api-config">
+                <input type="password" id="apiKey" placeholder="API Key de Gemini..." onchange="guardarApiKey()">
+            </div>
+        </div>
 
-        <label for="textoCampus">Texto o Apunte del Campus:</label>
-        <textarea id="textoCampus" placeholder="Pega aquí el contenido del PDF o texto que bajaste..."></textarea>
+        <!-- Panel de Control: Importar e Idioma -->
+        <div class="control-panel">
+            <div class="import-group">
+                <label for="fileCampus" class="btn-drive">
+                    📁 Importar desde Google Drive / Dispositivo
+                </label>
+                <input type="file" id="fileCampus" accept=".txt,.md,.pdf,.text" onchange="cargarArchivo(event)">
+                
+                <!-- Selector de Idioma / Traducción -->
+                <select id="idiomaSalida" class="select-lang">
+                    <option value="es">🇪🇸 Idioma de Salida: Español</option>
+                    <option value="en">🇬🇧 Idioma de Salida: Inglés (English)</option>
+                </select>
+            </div>
 
-        <button id="btnProcesar" onclick="generarResumen()">Generar Resumen Inteligente</button>
+            <div id="fileStatus" class="file-status"></div>
 
-        <div id="resultado" style="display: none;"></div>
+            <button id="btnSintetizar" class="btn-action" onclick="procesarDocumento()" disabled>
+                ✨ Procesar y Generar Resultado
+            </button>
+        </div>
+
+        <!-- Pantalla Única: Resultado (Hoja de Estudio) -->
+        <div class="results-container">
+            <div class="doc-header">
+                <span class="doc-title">📑 Resultado: Síntesis & Cuadros Sinópticos</span>
+                <button onclick="copiarResultado()" style="cursor:pointer; padding: 8px 16px; border-radius:8px; border:1px solid var(--border-color); background:#f8fafc; font-weight:600;">📋 Copiar</button>
+            </div>
+            
+            <div id="loader" class="loading-state" style="display: none;">
+                <div class="spinner"></div>
+                <p>El agente está analizando el documento en segundo plano... Traduciendo, sintetizando y armando cuadros sinópticos.</p>
+            </div>
+
+            <div id="placeholder" class="placeholder-text">
+                Importa un documento del campus o Drive para ver aquí el resumen estructurado y el cuadro sinóptico.
+            </div>
+
+            <div id="docContent" class="doc-body"></div>
+        </div>
+
     </div>
 
     <script>
-        async function generarResumen() {
-            const apiKey = document.getElementById('apiKey').value.trim();
-            const texto = document.getElementById('textoCampus').value.trim();
-            const divResultado = document.getElementById('resultado');
-            const btn = document.getElementById('btnProcesar');
+        let textoOcultoProcesar = "";
 
-            if (!apiKey || !texto) {
-                alert('Por favor, ingresa tu API Key y el texto a resumir.');
+        // Recuperar API Key guardada en el navegador
+        window.onload = () => {
+            const savedKey = localStorage.getItem('gemini_api_key');
+            if (savedKey) {
+                document.getElementById('apiKey').value = savedKey;
+            }
+        };
+
+        function guardarApiKey() {
+            const key = document.getElementById('apiKey').value.trim();
+            localStorage.setItem('gemini_api_key', key);
+        }
+
+        // Cargar archivo sin mostrar el texto en pantalla
+        function cargarArchivo(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                textoOcultoProcesar = e.target.result;
+                document.getElementById('fileStatus').innerText = `✔ Archivo listo para procesar: ${file.name}`;
+                document.getElementById('btnSintetizar').disabled = false;
+            };
+            reader.readAsText(file);
+        }
+
+        async function procesarDocumento() {
+            const apiKey = document.getElementById('apiKey').value.trim();
+            const idioma = document.getElementById('idiomaSalida').value;
+            const loader = document.getElementById('loader');
+            const placeholder = document.getElementById('placeholder');
+            const docContent = document.getElementById('docContent');
+            const btn = document.getElementById('btnSintetizar');
+
+            if (!apiKey) {
+                alert('Por favor, ingresa tu API Key de Gemini arriba a la derecha.');
                 return;
             }
 
-            // Bloquear interfaz mientras procesa
+            if (!textoOcultoProcesar) {
+                alert('Por favor, selecciona e importa un archivo primero.');
+                return;
+            }
+
+            // Ocultar placeholder y activar cargador
+            placeholder.style.display = 'none';
+            docContent.innerText = '';
+            loader.style.display = 'block';
             btn.disabled = true;
-            divResultado.style.display = 'block';
-            divResultado.innerHTML = '<div class="loading">🤖 Analizando texto, extrayendo ideas clave y armando cuadros sinópticos... Un segundo.</div>';
 
-            const prompt = `Actúa como un tutor académico experto. Realiza un resumen estructurado, detallado y de alta calidad pedagógica del siguiente texto universitario/escolar.
-Requisitos obligatorios:
-1. Ideas principales y conceptos clave explicados de forma clara y directa.
-2. Esquemas o cuadros sinópticos utilizando formato de texto estructurado (viñetas claras o tablas en Markdown).
-3. Lenguaje dinámico, didáctico y enfocado en la retención rápida de conocimientos.
+            const instruccionIdioma = idioma === 'en' 
+                ? "Responde íntegramente en INGLÉS (English). Traduce si el texto fuente está en español." 
+                : "Responde íntegramente en ESPAÑOL. Traduce si el texto fuente está en inglés.";
 
-Texto a sintetizar:
-${texto}`;
+            const prompt = `Actúa como un tutor académico experto y traductor profesional. Realiza una síntesis ejecutiva y esquemas de estudio del siguiente documento.
+
+REQUISITO DE IDIOMA: ${instruccionIdioma}
+
+Estructura obligatoria del resultado:
+1. SÍNTESIS ACADÉMICA: Conceptos clave e ideas principales explicadas con claridad.
+2. CUADRO SINÓPTICO / ESQUEMA: Formato jerárquico estructurado (usando viñetas o tablas) para organizar el contenido visualmente.
+3. GLOSARIO DE TÉRMINOS CLAVE: Palabras clave y sus definiciones.
+
+Contenido del documento a procesar:
+${textoOcultoProcesar}`;
 
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
-            const payload = {
-                contents: [{ parts: [{ text: prompt }] }]
-            };
 
             try {
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
                 });
 
                 const data = await response.json();
 
                 if (data.candidates && data.candidates[0].content) {
-                    const resumenFinal = data.candidates[0].content.parts[0].text;
-                    divResultado.innerText = resumenFinal;
+                    docContent.innerText = data.candidates[0].content.parts[0].text;
                 } else {
-                    divResultado.innerText = '❌ Error al generar el resumen. Revisa tu API Key o el formato del texto.';
+                    docContent.innerText = '❌ Ocurrió un error al generar la síntesis. Verifica que tu API Key sea válida.';
                 }
             } catch (error) {
-                divResultado.innerText = '❌ Error de red: ' + error.message;
+                docContent.innerText = '❌ Error de conexión: ' + error.message;
             } finally {
+                loader.style.display = 'none';
                 btn.disabled = false;
             }
+        }
+
+        function copiarResultado() {
+            const texto = document.getElementById('docContent').innerText;
+            if (!texto) return;
+            navigator.clipboard.writeText(texto);
+            alert('¡Resultado copiado al portapapeles!');
         }
     </script>
 </body>
