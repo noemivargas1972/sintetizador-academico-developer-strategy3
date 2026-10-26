@@ -3,282 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sintetizador Académico - Centro de Estudio</title>
-    <!-- Fuente moderna Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
-            --bg-main: #f8fafc;
-            --card-bg: #ffffff;
-            --text-title: #0f172a;
-            --text-body: #334155;
-            --border-color: #e2e8f0;
-            --accent-green: #10b981;
+    <title>Alma - Sintetizador Académico Inteligente</title>
+    <!-- Google Fonts: Inter & Instrument Serif -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS Play CDN para diseño minimalista y moderno -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Instrument Serif', 'serif'],
+                    }
+                }
+            }
         }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-main);
-            color: var(--text-body);
-            margin: 0;
-            padding: 30px 15px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .dashboard {
-            width: 100%;
-            max-width: 950px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        /* Encabezado Principal */
-        .header {
-            background: var(--card-bg);
-            padding: 24px 30px;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .header h1 {
-            margin: 0;
-            font-size: 22px;
-            color: var(--text-title);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .api-config input {
-            padding: 9px 14px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 13px;
-            outline: none;
-            width: 220px;
-        }
-
-        /* Barra de Control (Importación + Idioma) */
-        .control-panel {
-            background: var(--card-bg);
-            padding: 24px 30px;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-        }
-
-        .import-group {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .btn-drive {
-            background-color: #eff6ff;
-            color: var(--primary);
-            border: 1px dashed var(--primary);
-            padding: 12px 20px;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-drive:hover {
-            background-color: #dbeafe;
-        }
-
-        input[type="file"] {
-            display: none;
-        }
-
-        .select-lang {
-            padding: 10px 14px;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            background: var(--card-bg);
-            color: var(--text-title);
-            font-weight: 500;
-            outline: none;
-            cursor: pointer;
-        }
-
-        .btn-action {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 14px 28px;
-            font-size: 15px;
-            font-weight: 600;
-            border-radius: 10px;
-            cursor: pointer;
-            width: 100%;
-            transition: background 0.2s;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
-        }
-
-        .btn-action:hover {
-            background-color: var(--primary-dark);
-        }
-
-        .btn-action:disabled {
-            background-color: #94a3b8;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-
-        .file-status {
-            font-size: 13px;
-            color: var(--accent-green);
-            font-weight: 600;
-            width: 100%;
-        }
-
-        /* Pantalla Exclusiva de Resultado / Hoja de Estudio */
-        .results-container {
-            background: var(--card-bg);
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            min-height: 350px;
-        }
-
-        .doc-header {
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 15px;
-            margin-bottom: 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .doc-title {
-            font-size: 19px;
-            font-weight: 700;
-            color: var(--text-title);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .doc-body {
-            line-height: 1.8;
-            white-space: pre-wrap;
-            font-size: 15px;
-            color: var(--text-body);
-        }
-
-        .placeholder-text {
-            color: #94a3b8;
-            text-align: center;
-            padding: 80px 0;
-            font-style: italic;
-        }
-
-        .loading-state {
-            text-align: center;
-            padding: 60px 0;
-            color: #64748b;
-        }
-
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--primary);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 15px auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
+    </script>
 </head>
-<body>
+<body class="bg-stone-50 text-stone-900 font-sans antialiased selection:bg-amber-100 selection:text-amber-950 min-h-screen flex flex-col">
 
-    <div class="dashboard">
-
-        <!-- Encabezado con API Key guardable -->
-        <div class="header">
-            <h1>🎓 Sintetizador Académico</h1>
-            <div class="api-config">
-                <input type="password" id="apiKey" placeholder="API Key de Gemini..." onchange="guardarApiKey()">
+    <!-- Header Principal -->
+    <header class="bg-white border-b border-stone-200 sticky top-0 z-30 px-6 py-4 flex items-center justify-between shadow-sm">
+        <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-stone-900 text-white flex items-center justify-center font-bold text-lg shadow-md">A</div>
+            <div>
+                <h1 class="font-semibold text-stone-900 tracking-tight flex items-center gap-2">
+                    Alma <span class="text-xs px-2 py-0.5 bg-amber-100 text-amber-800 rounded-full font-medium">IA Pro</span>
+                </h1>
+                <p class="text-xs text-stone-500">Sintetizador Académico Inteligente</p>
             </div>
         </div>
 
-        <!-- Panel de Control: Importar e Idioma -->
-        <div class="control-panel">
-            <div class="import-group">
-                <label for="fileCampus" class="btn-drive">
-                    📁 Importar desde Google Drive / Dispositivo
-                </label>
-                <input type="file" id="fileCampus" accept=".txt,.md,.pdf,.text" onchange="cargarArchivo(event)">
-                
-                <!-- Selector de Idioma / Traducción -->
-                <select id="idiomaSalida" class="select-lang">
-                    <option value="es">🇪🇸 Idioma de Salida: Español</option>
-                    <option value="en">🇬🇧 Idioma de Salida: Inglés (English)</option>
-                </select>
+        <!-- Configuración de API Key -->
+        <div class="flex items-center gap-3">
+            <div class="hidden sm:flex flex-col items-end">
+                <span class="text-[11px] font-medium text-stone-400">Gemini API Key</span>
+                <span class="text-xs text-emerald-600 font-medium">Autoguardado</span>
+            </div>
+            <input type="password" id="apiKey" placeholder="Pega tu API Key..." onchange="guardarApiKey()" 
+                class="px-3 py-1.5 text-xs border border-stone-200 rounded-lg bg-stone-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-stone-900 w-44 sm:w-56 transition">
+        </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="flex-1 max-w-4xl mx-auto w-full p-4 sm:p-8 space-y-6">
+
+        <!-- Panel de Control y Parámetros -->
+        <div class="bg-white rounded-2xl border border-stone-200 p-6 shadow-sm space-y-5">
+            
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <!-- Importar Archivo -->
+                <div class="flex items-center gap-3">
+                    <label for="fileCampus" class="cursor-pointer bg-stone-100 hover:bg-stone-200 text-stone-800 px-4 py-2.5 rounded-xl font-medium text-sm transition flex items-center gap-2 border border-stone-200 shadow-xs">
+                        <span>📁 Importar Documento / Apunte</span>
+                    </label>
+                    <input type="file" id="fileCampus" accept=".txt,.md,.pdf,.text" onchange="cargarArchivo(event)" class="hidden">
+                    <span id="fileStatus" class="text-xs text-stone-500 italic">Ningún archivo seleccionado</span>
+                </div>
+
+                <!-- Selector de Idioma -->
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-medium text-stone-500">Idioma:</span>
+                    <select id="idiomaSalida" class="px-3 py-2 text-xs border border-stone-200 rounded-xl bg-stone-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-stone-900 font-medium text-stone-800">
+                        <option value="es">🇪🇸 Español</option>
+                        <option value="en">🇬🇧 English (Inglés)</option>
+                    </select>
+                </div>
             </div>
 
-            <div id="fileStatus" class="file-status"></div>
+            <!-- Opciones de Modo y Tono -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-3 border-t border-stone-100">
+                <div>
+                    <label class="block text-xs font-semibold text-stone-600 mb-1.5">Modalidad de Síntesis</label>
+                    <select id="summaryMode" class="w-full px-3 py-2 text-xs border border-stone-200 rounded-xl bg-stone-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-stone-900 font-medium text-stone-800">
+                        <option value="executive">Resumen Ejecutivo (Conciso y directo)</option>
+                        <option value="bullet_points">Puntos Clave y Viñetas Temáticas</option>
+                        <option value="detailed">Resumen Estructurado y Detallado</option>
+                        <option value="eli5">Explicación Sencilla (Analogías cotidianas)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-stone-600 mb-1.5">Tono Académico</label>
+                    <select id="summaryTone" class="w-full px-3 py-2 text-xs border border-stone-200 rounded-xl bg-stone-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-stone-900 font-medium text-stone-800">
+                        <option value="neutral">Neutral y Objetivo</option>
+                        <option value="professional">Profesional / Riguroso</option>
+                        <option value="academic">Académico / Universitario</option>
+                    </select>
+                </div>
+            </div>
 
-            <button id="btnSintetizar" class="btn-action" onclick="procesarDocumento()" disabled>
-                ✨ Procesar y Generar Resultado
+            <!-- Botón de Acción Principal -->
+            <button id="btnSintetizar" onclick="procesarDocumento()" disabled class="w-full py-3 px-4 bg-stone-900 hover:bg-stone-800 disabled:bg-stone-300 disabled:cursor-not-allowed text-white font-medium rounded-xl shadow-md transition flex items-center justify-center gap-2 text-sm">
+                <span>✨ Procesar y Generar Síntesis Inteligente</span>
             </button>
         </div>
 
-        <!-- Pantalla Única: Resultado (Hoja de Estudio) -->
-        <div class="results-container">
-            <div class="doc-header">
-                <span class="doc-title">📑 Resultado: Síntesis & Cuadros Sinópticos</span>
-                <button onclick="copiarResultado()" style="cursor:pointer; padding: 8px 16px; border-radius:8px; border:1px solid var(--border-color); background:#f8fafc; font-weight:600;">📋 Copiar</button>
-            </div>
-            
-            <div id="loader" class="loading-state" style="display: none;">
-                <div class="spinner"></div>
-                <p>El agente está analizando el documento en segundo plano... Traduciendo, sintetizando y armando cuadros sinópticos.</p>
-            </div>
-
-            <div id="placeholder" class="placeholder-text">
-                Importa un documento del campus o Drive para ver aquí el resumen estructurado y el cuadro sinóptico.
-            </div>
-
-            <div id="docContent" class="doc-body"></div>
+        <!-- Alerta de Error -->
+        <div id="errorBox" class="hidden p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
+            <span id="errorMessage"></span>
         </div>
 
-    </div>
+        <!-- Pantalla de Resultado (Visor Estético) -->
+        <div id="resultsContainer" class="bg-white rounded-2xl border border-stone-200 p-8 shadow-sm relative min-h-[400px]">
+            
+            <!-- Barra de Herramientas del Resultado -->
+            <div class="flex items-center justify-between pb-4 mb-6 border-b border-stone-100">
+                <div>
+                    <span class="text-xs font-semibold uppercase tracking-wider text-stone-400">Hoja de Estudio</span>
+                    <h2 id="resultTitle" class="text-lg font-bold text-stone-900 font-serif">Resultado pendiente</h2>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="copiarResultado()" class="px-3 py-1.5 text-xs font-medium border border-stone-200 bg-stone-50 hover:bg-stone-100 rounded-lg text-stone-700 transition flex items-center gap-1.5">
+                        📋 Copiar
+                    </button>
+                    <button onclick="traducirResultado()" class="px-3 py-1.5 text-xs font-medium border border-stone-200 bg-stone-50 hover:bg-stone-100 rounded-lg text-stone-700 transition flex items-center gap-1.5">
+                        🌐 Traducir / Cambiar Idioma
+                    </button>
+                </div>
+            </div>
 
+            <!-- Loader / Cargador -->
+            <div id="loader" class="hidden text-center py-24 space-y-3">
+                <div class="inline-block w-8 h-8 border-3 border-stone-200 border-t-stone-900 rounded-full animate-spin"></div>
+                <p class="text-xs text-stone-500 font-medium">Alma está analizando y sintetizando el contenido...</p>
+            </div>
+
+            <!-- Placeholder Inicial -->
+            <div id="placeholder" class="text-center py-20 text-stone-400 italic text-sm">
+                Importa un documento de texto o apunte arriba para ver la síntesis estructurada, viñetas clave y glosario aquí mismo.
+            </div>
+
+            <!-- Contenido del Resultado -->
+            <div id="docContent" class="space-y-6 text-sm text-stone-700 leading-relaxed hidden"></div>
+        </div>
+
+    </main>
+
+    <!-- Script de Integración Directa con Gemini -->
     <script>
         let textoOcultoProcesar = "";
+        let ultimoJsonResultado = null;
 
-        // Recuperar API Key guardada en el navegador
         window.onload = () => {
             const savedKey = localStorage.getItem('gemini_api_key');
-            if (savedKey) {
-                document.getElementById('apiKey').value = savedKey;
-            }
+            if (savedKey) document.getElementById('apiKey').value = savedKey;
         };
 
         function guardarApiKey() {
@@ -286,7 +157,6 @@
             localStorage.setItem('gemini_api_key', key);
         }
 
-        // Cargar archivo sin mostrar el texto en pantalla
         function cargarArchivo(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -294,7 +164,7 @@
             const reader = new FileReader();
             reader.onload = function(e) {
                 textoOcultoProcesar = e.target.result;
-                document.getElementById('fileStatus').innerText = `✔ Archivo listo para procesar: ${file.name}`;
+                document.getElementById('fileStatus').innerText = `✔ ${file.name} listo`;
                 document.getElementById('btnSintetizar').disabled = false;
             };
             reader.readAsText(file);
@@ -303,9 +173,13 @@
         async function procesarDocumento() {
             const apiKey = document.getElementById('apiKey').value.trim();
             const idioma = document.getElementById('idiomaSalida').value;
+            const mode = document.getElementById('summaryMode').value;
+            const tone = document.getElementById('summaryTone').value;
+            
             const loader = document.getElementById('loader');
             const placeholder = document.getElementById('placeholder');
             const docContent = document.getElementById('docContent');
+            const errorBox = document.getElementById('errorBox');
             const btn = document.getElementById('btnSintetizar');
 
             if (!apiKey) {
@@ -318,27 +192,31 @@
                 return;
             }
 
-            // Ocultar placeholder y activar cargador
-            placeholder.style.display = 'none';
-            docContent.innerText = '';
-            loader.style.display = 'block';
+            errorBox.classList.add('hidden');
+            placeholder.classList.add('hidden');
+            docContent.classList.add('hidden');
+            docContent.innerHTML = '';
+            loader.classList.remove('hidden');
             btn.disabled = true;
 
-            const instruccionIdioma = idioma === 'en' 
-                ? "Responde íntegramente en INGLÉS (English). Traduce si el texto fuente está en español." 
-                : "Responde íntegramente en ESPAÑOL. Traduce si el texto fuente está en inglés.";
+            const prompt = `Actúa como un tutor académico experto y asistente de lectura de élite para Alma.
+Genera una síntesis estructurada del siguiente texto:
+- Idioma de salida estricto: ${idioma === 'en' ? 'Inglés (English)' : 'Español'}.
+- Modalidad: ${mode} | Tono: ${tone}
 
-            const prompt = `Actúa como un tutor académico experto y traductor profesional. Realiza una síntesis ejecutiva y esquemas de estudio del siguiente documento.
+Estructura obligatoria en JSON plano (sin bloques de código markdown alrededor, solo el objeto JSON puro con estas llaves exactas):
+{
+  "title": "Título descriptivo y memorable",
+  "oneLineTakeaway": "La conclusión fundamental en una frase contundente",
+  "summaryText": "Cuerpo principal redactado con formato elegante",
+  "keyPoints": ["Viñeta 1", "Viñeta 2", "Viñeta 3", "Viñeta 4"],
+  "keyTerms": [{"term": "Concepto", "definition": "Definición clara"}]
+}
 
-REQUISITO DE IDIOMA: ${instruccionIdioma}
-
-Estructura obligatoria del resultado:
-1. SÍNTESIS ACADÉMICA: Conceptos clave e ideas principales explicadas con claridad.
-2. CUADRO SINÓPTICO / ESQUEMA: Formato jerárquico estructurado (usando viñetas o tablas) para organizar el contenido visualmente.
-3. GLOSARIO DE TÉRMINOS CLAVE: Palabras clave y sus definiciones.
-
-Contenido del documento a procesar:
-${textoOcultoProcesar}`;
+Contenido a resumir:
+"""
+${textoOcultoProcesar}
+"""`;
 
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
@@ -346,29 +224,83 @@ ${textoOcultoProcesar}`;
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }],
+                        generationConfig: { responseMimeType: "application/json" }
+                    })
                 });
 
                 const data = await response.json();
 
                 if (data.candidates && data.candidates[0].content) {
-                    docContent.innerText = data.candidates[0].content.parts[0].text;
+                    let rawText = data.candidates[0].content.parts[0].text;
+                    // Limpieza por si devuelve bloques markdown
+                    rawText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
+                    
+                    const parsed = JSON.parse(rawText);
+                    ultimoJsonResultado = parsed;
+
+                    document.getElementById('resultTitle').innerText = parsed.title || "Síntesis Académica";
+                    
+                    let htmlOutput = `
+                        <div class="p-4 bg-amber-50/60 border border-amber-200/60 rounded-xl">
+                            <span class="text-[11px] font-semibold text-amber-800 uppercase tracking-wide block mb-1">Idea Central</span>
+                            <p class="text-stone-900 font-medium text-base">${parsed.oneLineTakeaway || ''}</p>
+                        </div>
+                        <div class="space-y-3">
+                            <h3 class="text-xs font-bold uppercase tracking-wider text-stone-400">Resumen Editorial</h3>
+                            <p class="text-stone-700 whitespace-pre-wrap">${parsed.summaryText || ''}</p>
+                        </div>
+                    `;
+
+                    if (parsed.keyPoints && parsed.keyPoints.length > 0) {
+                        htmlOutput += `
+                            <div class="space-y-2 pt-3 border-t border-stone-100">
+                                <h3 class="text-xs font-bold uppercase tracking-wider text-stone-400">Puntos Clave</h3>
+                                <ul class="list-disc pl-5 space-y-1 text-stone-700">
+                                    ${parsed.keyPoints.map(p => `<li>${p}</li>`).join('')}
+                                </ul>
+                            </div>
+                        `;
+                    }
+
+                    if (parsed.keyTerms && parsed.keyTerms.length > 0) {
+                        htmlOutput += `
+                            <div class="space-y-2 pt-3 border-t border-stone-100">
+                                <h3 class="text-xs font-bold uppercase tracking-wider text-stone-400">Glosario de Términos</h3>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    ${parsed.keyTerms.map(t => `<div class="p-3 bg-stone-50 border border-stone-200/60 rounded-xl"><strong class="text-stone-900 block text-xs">${t.term}</strong><span class="text-stone-600 text-xs">${t.definition}</span></div>`).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    docContent.innerHTML = htmlOutput;
+                    docContent.classList.remove('hidden');
                 } else {
-                    docContent.innerText = '❌ Ocurrió un error al generar la síntesis. Verifica que tu API Key sea válida.';
+                    throw new Error('No se pudo procesar la respuesta de la IA.');
                 }
-            } catch (error) {
-                docContent.innerText = '❌ Error de conexión: ' + error.message;
+            } catch (err) {
+                document.getElementById('errorMessage').innerText = '❌ Ocurrió un error: ' + (err.message || 'Verifica tu API Key.');
+                errorBox.classList.remove('hidden');
+                placeholder.classList.remove('hidden');
             } finally {
-                loader.style.display = 'none';
+                loader.classList.add('hidden');
                 btn.disabled = false;
             }
         }
 
+        function traducirResultado() {
+            const select = document.getElementById('idiomaSalida');
+            select.value = select.value === 'es' ? 'en' : 'es';
+            procesarDocumento();
+        }
+
         function copiarResultado() {
-            const texto = document.getElementById('docContent').innerText;
-            if (!texto) return;
-            navigator.clipboard.writeText(texto);
-            alert('¡Resultado copiado al portapapeles!');
+            const contenido = document.getElementById('docContent').innerText;
+            if (!contenido) return;
+            navigator.clipboard.writeText(contenido);
+            alert('¡Síntesis copiada al portapapeles!');
         }
     </script>
 </body>
